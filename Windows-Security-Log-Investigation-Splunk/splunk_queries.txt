@@ -1,42 +1,42 @@
 # 1. Verify data
-index=windows_logs
+source="windows_security_logs.csv" host="charan" sourcetype="csv"
 
 # 2. Event ID analysis
-index=windows_logs
+source="windows_security_logs.csv" host="charan" sourcetype="csv"
 | stats count by event_id event_name
 | sort event_id
 
 # 3. Failed logins
-index=windows_logs event_id=4625
+source="windows_security_logs.csv" host="charan" sourcetype="csv" event_id=4625
 | table timestamp user domain workstation source_ip dest_ip logon_type_name failure_reason sub_status
 
 # 4. Failed logins by source IP
-index=windows_logs event_id=4625
+source="windows_security_logs.csv" host="charan" sourcetype="csv" event_id=4625
 | stats count by source_ip
 | sort -count
 
 # 5. Failed logins by user
-index=windows_logs event_id=4625
+source="windows_security_logs.csv" host="charan" sourcetype="csv" event_id=4625
 | stats count by user
 | sort -count
 
 # 6. Potential brute-force detection
-index=windows_logs event_id=4625
+source="windows_security_logs.csv" host="charan" sourcetype="csv" event_id=4625
 | stats count by source_ip user
 | where count >= 10
 | sort -count
 
 # 7. Successful logins
-index=windows_logs event_id=4624
+source="windows_security_logs.csv" host="charan" sourcetype="csv" event_id=4624
 | stats count by user source_ip
 | sort -count
 
 # 8. Authentication correlation
-index=windows_logs (event_id=4624 OR event_id=4625)
+source="windows_security_logs.csv" host="charan" sourcetype="csv" (event_id=4624 OR event_id=4625)
 | stats count by user source_ip event_id
 
 # 9. Malicious events
-index=windows_logs category="MALICIOUS"
+source="windows_security_logs.csv" host="charan" sourcetype="csv" category="MALICIOUS"
 | stats count by event_id event_name
 | sort -count
 
