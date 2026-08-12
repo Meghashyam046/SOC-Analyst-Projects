@@ -1,0 +1,36 @@
+# 1. Verify Data
+source="email_logs.csv" host="shyam" sourcetype="csv"
+
+# 2. Total Email Count
+source="email_logs.csv" host="shyam" sourcetype="csv"
+| stats count
+
+# 3. Email Category
+source="email_logs.csv" host="shyam" sourcetype="csv"
+| stats count by category
+
+# 4. Malicious Emails
+source="email_logs.csv" host="shyam" sourcetype="csv" category="MALICIOUS"
+
+# 5. High Spam Score
+source="email_logs.csv" host="shyam" sourcetype="csv" spam_score>=8
+| table timestamp sender recipient subject attachment spam_score src_ip category
+
+# 6. Suspicious Senders
+source="email_logs.csv" host="shyam" sourcetype="csv" category="MALICIOUS"
+| stats count by sender
+| sort -count
+
+# 7. Source IP Investigation
+source="email_logs.csv" host="shyam" sourcetype="csv" category="MALICIOUS"
+| stats count by src_ip
+| sort -count
+
+# 8. Attachment Analysis
+source="email_logs.csv" host="shyam" sourcetype="csv" category="MALICIOUS"
+| stats count by attachment
+| sort -count
+
+# 9. Action Analysis
+source="email_logs.csv" host="shyam" sourcetype="csv" category="MALICIOUS"
+| stats count by action
